@@ -1,2 +1,2 @@
 # tgbotplug-plugins
-Plugin Examples for tgbotplug
+Plugin Examples for [tgbotplug](https://github.com/fopina/tgbotplug)

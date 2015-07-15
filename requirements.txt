@@ -1,1 +1,1 @@
--e git+https://github.com/fopina/tgbotplug#egg=tgbotplug
+-e git+https://github.com/fopina/tgbotplug@v0.1.3-alpha#egg=tgbotplug

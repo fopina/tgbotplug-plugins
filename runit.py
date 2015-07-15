@@ -12,7 +12,6 @@ urllib3.disable_warnings()
 
 
 def main():
-    simsim = SimsimiPlugin()
     tg = tgbot.TGBot(
         'YOUR_BOT_TOKEN',
         plugins=[
@@ -20,7 +19,7 @@ def main():
             GooglePlugin(),
             RandomPlugin(),
         ],
-        no_command=simsim.simsimi
+        no_command=SimsimiPlugin()
     )
     tg.print_commands()
     tg.run()

@@ -12,3 +12,6 @@ class SimsimiPlugin(tgbot.TGPluginBase):
         }).json()
 
         tg.send_message(message.chat.id, res['res'])
+
+    def chat(self, tg, message, text):
+        return self.simsimi(tg, message, text)

@@ -2,7 +2,7 @@ import tgbot
 
 
 class SimsimiPlugin(tgbot.TGPluginBase):
-    def simsimi(self, tg, message, text):
+    def simsimi(self, bot, message, text):
         import requests
 
         res = requests.get('http://www.simsimi.com/requestChat', params={
@@ -11,7 +11,7 @@ class SimsimiPlugin(tgbot.TGPluginBase):
             'req': text,
         }).json()
 
-        tg.send_message(message.chat.id, res['res'])
+        bot.tg.send_message(message.chat.id, res['res'])
 
-    def chat(self, tg, message, text):
-        return self.simsimi(tg, message, text)
+    def chat(self, bot, message, text):
+        return self.simsimi(bot, message, text)

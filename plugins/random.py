@@ -7,7 +7,7 @@ class RandomPlugin(tgbot.TGPluginBase):
             ('random', self.random, 'pick a random value from provided list')
         ]
 
-    def random(self, tg, message, text):
+    def random(self, bot, message, text):
         from random import choice
         pars = text.split(' ')
         if pars:
@@ -15,4 +15,4 @@ class RandomPlugin(tgbot.TGPluginBase):
         else:
             reply = 'random what?'
 
-        tg.send_message(message.chat.id, reply)
+        bot.tg.send_message(message.chat.id, reply)

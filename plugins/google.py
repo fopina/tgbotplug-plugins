@@ -11,9 +11,9 @@ class GooglePlugin(tgbot.TGPluginBase):
             ('g', self.google, 'Google this')
         ]
 
-    def google(self, tg, message, text):
+    def google(self, bot, message, text):
         if not text:
-            tg.send_message(message.chat.id, 'Google for what?', reply_to_message_id=message.message_id, reply_markup=ForceReply.create(selective=True))
+            bot.tg.send_message(message.chat.id, 'Google for what?', reply_to_message_id=message.message_id, reply_markup=ForceReply.create(selective=True))
             return
 
         import requests
@@ -32,4 +32,4 @@ class GooglePlugin(tgbot.TGPluginBase):
 %(url)s\
 ''' % res
 
-        tg.send_message(message.chat.id, reply)
+        bot.tg.send_message(message.chat.id, reply)

@@ -1,4 +1,5 @@
 import tgbot
+from twx.botapi import ForceReply
 
 
 class EchoPlugin(tgbot.TGPluginBase):
@@ -8,7 +9,15 @@ class EchoPlugin(tgbot.TGPluginBase):
         ]
 
     def echo(self, bot, message, text):
-        reply = text
-        if not reply:
-            reply = 'echo'
-        bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)
+        if text:
+            bot.tg.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+        else:
+            m = bot.tg.send_message(
+                message.chat.id,
+                'echo what?',
+                reply_to_message_id=message.message_id,
+                reply_markup=ForceReply.create(
+                    selective=True
+                )
+            ).wait()
+            self.need_reply(self.echo, message, out_message=m, selective=True)

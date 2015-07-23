@@ -1,5 +1,6 @@
 # tgbotplug-plugins
-Plugin Examples for [tgbotplug](https://github.com/fopina/tgbotplug)
+Plugin Examples for [tgbotplug](https://github.com/fopina/tgbotplug)  
+[![Build Status](https://travis-ci.org/fopina/tgbotplug-plugins.svg)](https://travis-ci.org/fopina/tgbotplug-plugins)
 
 ## Usage
 

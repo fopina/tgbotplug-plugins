@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import tgbot
 from twx.botapi import ReplyKeyboardMarkup, ReplyKeyboardHide
 import random
@@ -50,7 +49,7 @@ class GuessPlugin(tgbot.TGPluginBase):
                 reply = "I'm thinking higher..."
             else:
                 reply = "I'm thinking lower..."
-        except:
+        except ValueError:
             reply = "Invalid guess!"
 
         if done:

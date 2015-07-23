@@ -4,7 +4,7 @@
 import tgbot
 from requests.packages import urllib3
 from plugins.echo import EchoPlugin
-from plugins.random import RandomPlugin
+from plugins.random_choice import RandomPlugin
 from plugins.google import GooglePlugin
 from plugins.simsimi import SimsimiPlugin
 

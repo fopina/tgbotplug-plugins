@@ -6,53 +6,49 @@ from plugins.random_choice import RandomPlugin
 class RandomPluginTest(plugintest.PluginTestCase):
     def setUp(self):
         self.bot = self.fake_bot('', plugins=[RandomPlugin()])
+        self.received_id = 1
+
+    def receive_message(self, text, sender=None, chat=None):
+        if sender is None:
+            sender = {
+                'id': 1,
+                'first_name': 'John',
+                'last_name': 'Doe',
+            }
+
+        if chat is None:
+            chat = sender
+
+        self.bot.process_update(
+            Update.from_dict({
+                'update_id': self.received_id,
+                'message': {
+                    'message_id': self.received_id,
+                    'text': text,
+                    'chat': chat,
+                    'from': sender,
+                }
+            })
+        )
+
+        self.received_id += 1
 
     def test_need_reply(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/random',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('/random')
         self.assertReplied(self.bot, 'What are the options? (space separated)')
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': 'foo bar',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('foo bar')
 
-        try:
-            self.assertReplied(self.bot, 'foo')
-        except AssertionError:
-            self.assertReplied(self.bot, 'bar')
+        self.assertIn(
+            self.last_reply(self.bot),
+            [
+                'foo',
+                'bar',
+            ]
+        )
 
     def test_reply(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/random foo bar',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('/random foo bar')
 
         self.assertIn(
             self.last_reply(self.bot),

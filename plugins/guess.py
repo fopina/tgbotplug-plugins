@@ -4,10 +4,6 @@ import random
 
 
 class GuessPlugin(tgbot.TGPluginBase):
-    def __init__(self):
-        super(GuessPlugin, self).__init__()
-        self.numbers = {}
-
     def list_commands(self):
         return [
             ('guess_start', self.guess_start, 'start the (number) guess game!'),
@@ -16,7 +12,7 @@ class GuessPlugin(tgbot.TGPluginBase):
 
     def guess_start(self, bot, message, text):
         number = int(random.random() * 10)
-        self.numbers[message.chat.id] = number
+        self.save_data(message.chat.id, obj=number)
 
         m = bot.tg.send_message(
             message.chat.id,
@@ -36,7 +32,7 @@ class GuessPlugin(tgbot.TGPluginBase):
         self.need_reply(self.guess_try, message, out_message=m, selective=True)
 
     def guess_try(self, bot, message, text):
-        number = self.numbers[message.chat.id]
+        number = self.read_data(message.chat.id)
 
         done = False
 
@@ -53,8 +49,8 @@ class GuessPlugin(tgbot.TGPluginBase):
             reply = "Invalid guess!"
 
         if done:
-            del(self.numbers[message.chat.id])
-            self.clear_chat_replies(message.chat.id)
+            self.save_data(message.chat.id)
+            self.clear_chat_replies(message.chat)
             bot.tg.send_message(
                 message.chat.id,
                 reply,
@@ -80,12 +76,8 @@ class GuessPlugin(tgbot.TGPluginBase):
             self.need_reply(self.guess_try, message, out_message=m, selective=True)
 
     def guess_stop(self, bot, message, text):
-        try:
-            del(self.numbers[message.chat.id])
-        except:
-            pass
-
-        self.clear_chat_replies(message.chat.id)
+        self.save_data(message.chat.id)
+        self.clear_chat_replies(message.chat)
 
         bot.tg.send_message(
             message.chat.id,

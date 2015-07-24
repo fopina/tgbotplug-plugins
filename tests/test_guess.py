@@ -7,88 +7,53 @@ class GuessPluginTest(plugintest.PluginTestCase):
     def setUp(self):
         self.plugin = GuessPlugin()
         self.bot = self.fake_bot('', plugins=[self.plugin])
+        self.received_id = 1
+
+    def receive_message(self, text, sender=None, chat=None):
+        if sender is None:
+            sender = {
+                'id': 1,
+                'first_name': 'John',
+                'last_name': 'Doe',
+            }
+
+        if chat is None:
+            chat = sender
+
+        self.bot.process_update(
+            Update.from_dict({
+                'update_id': self.received_id,
+                'message': {
+                    'message_id': self.received_id,
+                    'text': text,
+                    'chat': chat,
+                    'from': sender,
+                }
+            })
+        )
+
+        self.received_id += 1
 
     def test_play(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/guess_start',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('/guess_start')
         self.assertReplied(self.bot, "I'm going to think of a number between 0 and 9 and you have to guess it! What's your guess?")
-        self.assertIn(1, self.plugin.numbers)
-        self.assertGreaterEqual(self.plugin.numbers[1], 0)
-        self.assertLessEqual(self.plugin.numbers[1], 9)
+
+        number = self.plugin.read_data(1)
+        self.assertIsNotNone(number)
+        self.assertGreaterEqual(number, 0)
+        self.assertLessEqual(number, 9)
 
         # force number for testing
-        self.plugin.numbers[1] = 5
+        self.plugin.save_data(1, obj=5)
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '1',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-
+        self.receive_message('1')
         self.assertReplied(self.bot, "I'm thinking higher...")
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '6',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-
+        self.receive_message('6')
         self.assertReplied(self.bot, "I'm thinking lower...")
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': 'error?',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-
+        self.receive_message('gief error')
         self.assertReplied(self.bot, 'Invalid guess!')
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '5',
-                    'chat': {
-                        'id': 1,
-                    },
-                    'from': {
-                        'first_name': 'John',
-                        'last_name': 'Doe',
-                    }
-                }
-            })
-        )
-
+        self.receive_message('5')
         self.assertReplied(self.bot, 'Congratz, you nailed it John')

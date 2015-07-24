@@ -2,87 +2,72 @@
 from tgbot import plugintest
 from twx.botapi import Update
 from plugins.google import GooglePlugin
+import re
 
 
 class GooglePluginTest(plugintest.PluginTestCase):
     def setUp(self):
         self.bot = self.fake_bot('', plugins=[GooglePlugin()])
+        self.received_id = 1
 
-    def test_not_found(self):
+    def receive_message(self, text, sender=None, chat=None):
+        if sender is None:
+            sender = {
+                'id': 1,
+                'first_name': 'John',
+                'last_name': 'Doe',
+            }
+
+        if chat is None:
+            chat = sender
+
         self.bot.process_update(
             Update.from_dict({
-                'update_id': 1,
+                'update_id': self.received_id,
                 'message': {
-                    'message_id': 1,
-                    'text': '/g site:github.com tgbotplug-plugins',
-                    'chat': {
-                        'id': 1,
-                    },
+                    'message_id': self.received_id,
+                    'text': text,
+                    'chat': chat,
+                    'from': sender,
                 }
             })
         )
 
+        self.received_id += 1
+
+    def test_not_found(self):
+        self.receive_message('/g site:www.android.com "iphone is awesome"')
         # it seems ajax.googleapi.com uses different cache from normal google :/
         # test to be updated one day..
         self.assertReplied(self.bot, 'Sorry, nothing found...')
 
     def test_reply(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/g site:skmobi.com',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('/g site:github.com tgbotplug')
+        # remove 'X days ago' from reply for longer-lasting match!
+        reply = re.sub('\d+ \w+ ago', '', self.last_reply(self.bot))
 
-        self.assertReplied(self.bot, u'''\
-skmobi
+        self.assertEqual(reply, u'''\
+fopina/tgbotplug · GitHub
 
-skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
+ ... Telegram plugin-based bot. Contribute to tgbotplug development by creating an \n\
+account on GitHub.
 
-Daring Fireball. Copyright © 2012 Filipe Pina.
-
-http://skmobi.com/\
+https://github.com/fopina/tgbotplug/tree/master\
 ''')
 
     def test_need_reply(self):
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': '/g',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
+        self.receive_message('/g')
         self.assertReplied(self.bot, 'Google for what?')
 
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': 1,
-                'message': {
-                    'message_id': 1,
-                    'text': 'site:skmobi.com',
-                    'chat': {
-                        'id': 1,
-                    },
-                }
-            })
-        )
-        self.assertReplied(self.bot, u'''\
-skmobi
+        self.receive_message('site:github.com tgbotplug')
+        # remove 'X days ago' from reply for longer-lasting match!
+        reply = re.sub('\d+ \w+ ago', '', self.last_reply(self.bot))
 
-skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
+        self.assertEqual(reply, u'''\
+fopina/tgbotplug · GitHub
 
-Daring Fireball. Copyright © 2012 Filipe Pina.
+ ... Telegram plugin-based bot. Contribute to tgbotplug development by creating an \n\
+account on GitHub.
 
-http://skmobi.com/\
+https://github.com/fopina/tgbotplug/tree/master\
 ''')

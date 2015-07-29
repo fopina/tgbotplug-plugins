@@ -2,7 +2,6 @@
 from tgbot import plugintest
 from twx.botapi import Update
 from plugins.google import GooglePlugin
-import re
 
 
 class GooglePluginTest(plugintest.PluginTestCase):
@@ -37,37 +36,31 @@ class GooglePluginTest(plugintest.PluginTestCase):
 
     def test_not_found(self):
         self.receive_message('/g site:www.android.com "iphone is awesome"')
-        # it seems ajax.googleapi.com uses different cache from normal google :/
-        # test to be updated one day..
         self.assertReplied(self.bot, 'Sorry, nothing found...')
 
     def test_reply(self):
-        self.receive_message('/g site:github.com tgbotplug')
-        # remove 'X days ago' from reply for longer-lasting match!
-        reply = re.sub('\d+ \w+ ago', '', self.last_reply(self.bot))
+        self.receive_message('/g site:skmobi.com')
+        self.assertReplied(self.bot, u'''\
+skmobi
 
-        self.assertEqual(reply, u'''\
-fopina/tgbotplug · GitHub
+skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
 
- ... Telegram plugin-based bot. Contribute to tgbotplug development by creating an \n\
-account on GitHub.
+Daring Fireball. Copyright © 2012 Filipe Pina.
 
-https://github.com/fopina/tgbotplug/tree/master\
+http://skmobi.com/\
 ''')
 
     def test_need_reply(self):
         self.receive_message('/g')
         self.assertReplied(self.bot, 'Google for what?')
 
-        self.receive_message('site:github.com tgbotplug')
-        # remove 'X days ago' from reply for longer-lasting match!
-        reply = re.sub('\d+ \w+ ago', '', self.last_reply(self.bot))
+        self.receive_message('site:skmobi.com')
+        self.assertReplied(self.bot, u'''\
+skmobi
 
-        self.assertEqual(reply, u'''\
-fopina/tgbotplug · GitHub
+skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
 
- ... Telegram plugin-based bot. Contribute to tgbotplug development by creating an \n\
-account on GitHub.
+Daring Fireball. Copyright © 2012 Filipe Pina.
 
-https://github.com/fopina/tgbotplug/tree/master\
+http://skmobi.com/\
 ''')

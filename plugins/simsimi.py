@@ -1,9 +1,11 @@
 import tgbot
+from twx.botapi import ChatAction
+import requests
 
 
 class SimsimiPlugin(tgbot.TGPluginBase):
     def simsimi(self, bot, message, text):
-        import requests
+        bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
 
         res = requests.get('http://www.simsimi.com/requestChat', params={
             'lc': 'en',

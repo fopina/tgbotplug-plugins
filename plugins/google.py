@@ -1,8 +1,10 @@
 import tgbot
 import re
 import HTMLParser
-from twx.botapi import ForceReply, ChatAction
+from twx.botapi import ForceReply, ChatAction, InputFile, InputFileInfo
 import requests
+from cStringIO import StringIO
+import mimetypes
 
 
 class GooglePlugin(tgbot.TGPluginBase):
@@ -65,15 +67,19 @@ class GooglePlugin(tgbot.TGPluginBase):
                 'q': text,
             }).json()
 
+            reply = None
+
             if res['responseStatus'] == 200:
                 try:
                     res = res['responseData']['results'][0]
-                    res['content'] = self.unescaper.unescape(GooglePlugin.TAG_RE.sub('', res['content']))
-                    res['titleNoFormatting'] = self.unescaper.unescape(res['titleNoFormatting'])
-                    reply = '%(titleNoFormatting)s\n\n%(content)s\n\n%(url)s' % res
+                    url = res['url']
+                    fp = StringIO(requests.get(url).content)
+                    file_info = InputFileInfo(url.split('/')[-1], fp, mimetypes.guess_type(url)[0])
+                    bot.tg.send_photo(chat_id=message.chat.id, photo=InputFile('photo', file_info))
                 except IndexError:
                     reply = 'Sorry, nothing found...'
             else:
                 reply = 'It seems I\'m googling too much lately, I need to rest a little...'
 
-            bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)
+            if reply:
+                bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)

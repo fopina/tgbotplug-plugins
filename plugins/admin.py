@@ -1,10 +1,12 @@
 import tgbot
 from twx.botapi import Error
+import hashlib
 
 
 class AdminPlugin(tgbot.TGPluginBase):
     def __init__(self):
         super(AdminPlugin, self).__init__()
+        self.__default_pwd = hashlib.sha256('changeme').hexdigest()
 
     def list_commands(self):
         return [
@@ -12,9 +14,36 @@ class AdminPlugin(tgbot.TGPluginBase):
             ('chats', self.list_chats, 'List active chats'),
             ('more', self.more, 'List 10 more hits'),
             ('msg', self.msg, 'Send message to user/chat'),
+            ('newpass', self.newpass, 'Change admin password'),
+            ('auth', self.auth, 'Authenticate as admin'),
         ]
 
+    def __is_admin(self, message):
+        obj = self.read_data(message.chat.id, key2='ADMIN')
+        return obj is True
+
+
+    def auth(self, bot, message, text):
+        if self.__is_admin(message):
+            bot.tg.send_message(message.chat.id, 'You are already admin')
+        else:
+            phash = self.read_data('ADMINPWD')
+            if phash is None:
+                phash = self.__default_pwd
+
+            if hashlib.sha256(text).hexdigest() == phash:
+                self.save_data(message.chat.id, key2='ADMIN', obj=True)
+                bot.tg.send_message(message.chat.id, 'Welcome :-)')
+
+    def newpass(self, bot, message, text):
+        if self.__is_admin(message) and text:
+            self.save_data('ADMINPWD', obj=hashlib.sha256(text).hexdigest())
+            bot.tg.send_message(message.chat.id, 'Password updated to:\n' + text)
+
     def list_users(self, bot, message, text):
+        if not self.__is_admin(message):
+            return
+
         msg = ''
         cnt = 0
         for u in tgbot.models.User.select().paginate(1, 10):
@@ -34,6 +63,9 @@ class AdminPlugin(tgbot.TGPluginBase):
         bot.tg.send_message(message.chat.id, msg)
 
     def list_chats(self, bot, message, text):
+        if not self.__is_admin(message):
+            return
+
         msg = ''
         cnt = 0
         for u in tgbot.models.GroupChat.select().paginate(1, 10):
@@ -52,6 +84,9 @@ class AdminPlugin(tgbot.TGPluginBase):
         bot.tg.send_message(message.chat.id, msg)
 
     def msg(self, bot, message, text):
+        if not self.__is_admin(message):
+            return
+
         p = text.find(' ')
         cid = text[:p]
         msg = text[p + 1:]
@@ -62,6 +97,9 @@ class AdminPlugin(tgbot.TGPluginBase):
             bot.tg.send_message(message.chat.id, "'%s' sent to %s" % (msg, cid))
 
     def more(self, bot, message, text):
+        if not self.__is_admin(message):
+            return
+
         more = self.read_data(message.chat.id)
 
         if more is None:

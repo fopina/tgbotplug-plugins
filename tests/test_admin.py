@@ -63,6 +63,12 @@ class AdminPluginTest(plugintest.PluginTestCase):
 
     def test_users(self):
         self.receive_message('/users')
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'Welcome :-)')
+
+        self.receive_message('/users')
         self.assertReplied(
             self.bot,
             '1 - John Doe\n'
@@ -83,6 +89,12 @@ class AdminPluginTest(plugintest.PluginTestCase):
 ''')
 
     def test_groups(self):
+        self.receive_message('/chats')
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'Welcome :-)')
+
         self.receive_message('/chats')
         self.assertReplied(
             self.bot,
@@ -136,6 +148,12 @@ class AdminPluginTest(plugintest.PluginTestCase):
 
     def test_more_users(self):
         self.receive_message('/more')
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'Welcome :-)')
+
+        self.receive_message('/more')
         self.assertReplied(self.bot, 'No pending query...')
 
         self.receive_message('/users')
@@ -181,6 +199,12 @@ There are more users, type /more to list 10 more results''')
 
     def test_more_chats(self):
         self.receive_message('/more')
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'Welcome :-)')
+
+        self.receive_message('/more')
         self.assertReplied(self.bot, 'No pending query...')
 
         self.receive_message('/chats')
@@ -219,3 +243,30 @@ There are more groups, type /more to list 10 more results''')
         self.receive_message('/more')
         self.assertReplied(self.bot, 'No pending query...')
 
+    def test_change_password(self):
+        self.receive_message('/newpass')
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'Welcome :-)')
+
+        self.receive_message('/newpass otherpassword')
+        self.assertReplied(
+            self.bot, '''\
+Password updated to:
+otherpassword''')
+
+        self.receive_message('/auth changeme')
+        self.assertReplied(self.bot, 'You are already admin')
+
+        sender = {
+            'id': 2,
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+        }
+        self.clear_replies(self.bot)
+        self.receive_message('/auth changeme', sender=sender)
+        self.assertRaises(AssertionError, self.last_reply, self.bot)
+
+        self.receive_message('/auth otherpassword', sender=sender)
+        self.assertReplied(self.bot, 'Welcome :-)')

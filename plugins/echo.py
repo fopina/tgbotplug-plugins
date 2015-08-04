@@ -1,12 +1,12 @@
-import tgbot
+from tgbot.pluginbase import TGPluginBase, TGCommandBase
 from twx.botapi import ForceReply
 
 
-class EchoPlugin(tgbot.TGPluginBase):
+class EchoPlugin(TGPluginBase):
     def list_commands(self):
-        return [
-            ('echo', self.echo, 'right back at ya')
-        ]
+        return (
+            TGCommandBase('echo', self.echo, 'right back at ya'),
+        )
 
     def echo(self, bot, message, text):
         if text:

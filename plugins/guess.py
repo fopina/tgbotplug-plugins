@@ -1,17 +1,17 @@
-import tgbot
+from tgbot.pluginbase import TGPluginBase, TGCommandBase
 from twx.botapi import ReplyKeyboardMarkup, ReplyKeyboardHide
-import random
+from random import random
 
 
-class GuessPlugin(tgbot.TGPluginBase):
+class GuessPlugin(TGPluginBase):
     def list_commands(self):
-        return [
-            ('guess_start', self.guess_start, 'start the (number) guess game!'),
-            ('guess_stop', self.guess_stop, 'stop the (number) guess game (why? :())')
-        ]
+        return (
+            TGCommandBase('guess_start', self.guess_start, 'start the (number) guess game!'),
+            TGCommandBase('guess_stop', self.guess_stop, u'stop the (number) guess game (why? \U0001F622)')
+        )
 
     def guess_start(self, bot, message, text):
-        number = int(random.random() * 10)
+        number = int(random() * 10)
         self.save_data(message.chat.id, obj=number)
 
         m = bot.tg.send_message(

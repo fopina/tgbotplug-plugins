@@ -54,7 +54,7 @@ class AdminPluginTest(plugintest.PluginTestCase):
                     'text': None,
                     'chat': chat,
                     'from': sender,
-                    'left_chat_participant': dict(self.bot.me.__dict__),
+                    'left_chat_participant': dict(self.bot.tg._bot_user.__dict__),
                 }
             })
         )

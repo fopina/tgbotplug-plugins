@@ -9,14 +9,14 @@ class AdminPlugin(tgbot.TGPluginBase):
         self.__default_pwd = hashlib.sha256('changeme').hexdigest()
 
     def list_commands(self):
-        return [
-            ('users', self.list_users, 'List known users'),
-            ('chats', self.list_chats, 'List active chats'),
-            ('more', self.more, 'List 10 more hits'),
-            ('msg', self.msg, 'Send message to user/chat'),
-            ('newpass', self.newpass, 'Change admin password'),
-            ('auth', self.auth, 'Authenticate as admin'),
-        ]
+        return (
+            tgbot.TGCommandBase('users', self.list_users, 'List known users'),
+            tgbot.TGCommandBase('chats', self.list_chats, 'List active chats'),
+            tgbot.TGCommandBase('more', self.more, 'List 10 more hits'),
+            tgbot.TGCommandBase('msg', self.msg, 'Send message to user/chat'),
+            tgbot.TGCommandBase('newpass', self.newpass, 'Change admin password'),
+            tgbot.TGCommandBase('auth', self.auth, 'Authenticate as admin'),
+        )
 
     def __is_admin(self, message):
         obj = self.read_data(message.chat.id, key2='ADMIN')

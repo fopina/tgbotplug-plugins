@@ -1,13 +1,13 @@
-import tgbot
+from tgbot.pluginbase import TGPluginBase, TGCommandBase
+from twx.botapi import ForceReply, ChatAction, InputFile, InputFileInfo
 import re
 import HTMLParser
-from twx.botapi import ForceReply, ChatAction, InputFile, InputFileInfo
 import requests
 from cStringIO import StringIO
 import mimetypes
 
 
-class GooglePlugin(tgbot.TGPluginBase):
+class GooglePlugin(TGPluginBase):
     TAG_RE = re.compile(r'<[^>]+>')
 
     def __init__(self):
@@ -15,10 +15,10 @@ class GooglePlugin(tgbot.TGPluginBase):
         self.unescaper = HTMLParser.HTMLParser()
 
     def list_commands(self):
-        return [
-            ('g', self.google, 'Google it'),
-            ('gi', self.googleImage, 'Google an image'),
-        ]
+        return (
+            TGCommandBase('g', self.google, 'Google it'),
+            TGCommandBase('gi', self.googleImage, 'Google an image'),
+        )
 
     def google(self, bot, message, text):
         if not text:

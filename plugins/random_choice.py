@@ -1,13 +1,13 @@
-import tgbot
+from tgbot.pluginbase import TGPluginBase, TGCommandBase
 from random import choice
 from twx.botapi import ForceReply
 
 
-class RandomPlugin(tgbot.TGPluginBase):
+class RandomPlugin(TGPluginBase):
     def list_commands(self):
-        return [
-            ('random', self.random, 'pick a random value from provided list')
-        ]
+        return (
+            TGCommandBase('random', self.random, 'pick a random value from provided list'),
+        )
 
     def random(self, bot, message, text):
         if not text:

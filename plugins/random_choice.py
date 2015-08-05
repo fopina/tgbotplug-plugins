@@ -11,7 +11,7 @@ class RandomPlugin(TGPluginBase):
 
     def random(self, bot, message, text):
         if not text:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'What are the options? (space separated)',
                 reply_to_message_id=message.message_id,
@@ -21,4 +21,4 @@ class RandomPlugin(TGPluginBase):
         else:
             pars = text.split()  # split on any whitespace
             reply = choice(pars)
-            bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)

@@ -24,7 +24,7 @@ class AdminPlugin(tgbot.TGPluginBase):
 
     def auth(self, bot, message, text):
         if self.__is_admin(message):
-            bot.tg.send_message(message.chat.id, 'You are already admin')
+            bot.send_message(message.chat.id, 'You are already admin')
         else:
             phash = self.read_data('ADMINPWD')
             if phash is None:
@@ -32,12 +32,12 @@ class AdminPlugin(tgbot.TGPluginBase):
 
             if hashlib.sha256(text).hexdigest() == phash:
                 self.save_data(message.chat.id, key2='ADMIN', obj=True)
-                bot.tg.send_message(message.chat.id, u'Welcome \U0001F60F')
+                bot.send_message(message.chat.id, u'Welcome \U0001F60F')
 
     def newpass(self, bot, message, text):
         if self.__is_admin(message) and text:
             self.save_data('ADMINPWD', obj=hashlib.sha256(text).hexdigest())
-            bot.tg.send_message(message.chat.id, 'Password updated to:\n' + text)
+            bot.send_message(message.chat.id, 'Password updated to:\n' + text)
 
     def list(self, bot, message, model_cls, page=1):
         msg = ''
@@ -70,7 +70,7 @@ class AdminPlugin(tgbot.TGPluginBase):
         else:
             self.save_data(message.chat.id)
 
-        bot.tg.send_message(message.chat.id, msg)
+        bot.send_message(message.chat.id, msg)
 
     def list_users(self, bot, message, text):
         if not self.__is_admin(message):
@@ -87,13 +87,13 @@ class AdminPlugin(tgbot.TGPluginBase):
             return
 
         if text == '':
-            bot.tg.send_message(message.chat.id, 'Use /users or /chats to list available ids')
+            bot.send_message(message.chat.id, 'Use /users or /chats to list available ids')
             return
 
         p = text.find(' ')
         if p < 0:
             self.save_data(message.chat.id, key2='msg', obj=text)
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'And say what?',
                 reply_to_message_id=message.message_id,
@@ -113,14 +113,14 @@ class AdminPlugin(tgbot.TGPluginBase):
             self.save_data(message.chat.id, key2='msg')
 
         if dst is None:
-            bot.tg.send_message(message.chat.id, 'Something went wrong...')
+            bot.send_message(message.chat.id, 'Something went wrong...')
             return
 
-        m = bot.tg.send_message(dst, msg).wait()
+        m = bot.send_message(dst, msg).wait()
         if isinstance(m, Error):
-            bot.tg.send_message(message.chat.id, "Failed to send message:\n%s (%d)" % (m.description, m.error_code))
+            bot.send_message(message.chat.id, "Failed to send message:\n%s (%d)" % (m.description, m.error_code))
         else:
-            bot.tg.send_message(message.chat.id, "'%s' sent to %s" % (msg, dst))
+            bot.send_message(message.chat.id, "'%s' sent to %s" % (msg, dst))
 
     def more(self, bot, message, text):
         if not self.__is_admin(message):
@@ -129,7 +129,7 @@ class AdminPlugin(tgbot.TGPluginBase):
         more = self.read_data(message.chat.id)
 
         if more is None:
-            bot.tg.send_message(message.chat.id, 'No pending query...')
+            bot.send_message(message.chat.id, 'No pending query...')
             return
 
         more['page'] += 1

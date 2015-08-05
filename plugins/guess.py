@@ -14,7 +14,7 @@ class GuessPlugin(TGPluginBase):
         number = int(random() * 10)
         self.save_data(message.chat.id, obj=number)
 
-        m = bot.tg.send_message(
+        m = bot.send_message(
             message.chat.id,
             "I'm going to think of a number between 0 and 9 and you have to guess it! What's your guess?",
             reply_to_message_id=message.message_id,
@@ -51,14 +51,14 @@ class GuessPlugin(TGPluginBase):
         if done:
             self.save_data(message.chat.id)
             self.clear_chat_replies(message.chat)
-            bot.tg.send_message(
+            bot.send_message(
                 message.chat.id,
                 reply,
                 reply_to_message_id=message.message_id,
                 reply_markup=ReplyKeyboardHide.create()
             )
         else:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 reply,
                 reply_to_message_id=message.message_id,
@@ -79,7 +79,7 @@ class GuessPlugin(TGPluginBase):
         self.save_data(message.chat.id)
         self.clear_chat_replies(message.chat)
 
-        bot.tg.send_message(
+        bot.send_message(
             message.chat.id,
             'Ok :(',
             reply_to_message_id=message.message_id,

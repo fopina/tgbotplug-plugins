@@ -22,7 +22,7 @@ class GooglePlugin(TGPluginBase):
 
     def google(self, bot, message, text):
         if not text:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'Google for what?',
                 reply_to_message_id=message.message_id,
@@ -30,7 +30,7 @@ class GooglePlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.google, message, out_message=m, selective=True)
         else:
-            bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
+            bot.send_chat_action(message.chat.id, ChatAction.TEXT)
 
             res = requests.get('http://ajax.googleapis.com/ajax/services/search/web', params={
                 'v': 1.0,
@@ -48,11 +48,11 @@ class GooglePlugin(TGPluginBase):
             else:
                 reply = 'It seems I\'m googling too much lately, I need to rest a little...'
 
-            bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id, disable_web_page_preview=True)
+            bot.send_message(message.chat.id, reply, reply_to_message_id=message.message_id, disable_web_page_preview=True)
 
     def googleImage(self, bot, message, text):
         if not text:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'Image of what?',
                 reply_to_message_id=message.message_id,
@@ -60,7 +60,7 @@ class GooglePlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.googleImage, message, out_message=m, selective=True)
         else:
-            bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
+            bot.send_chat_action(message.chat.id, ChatAction.TEXT)
 
             res = requests.get('http://ajax.googleapis.com/ajax/services/search/images', params={
                 'v': 1.0,
@@ -75,11 +75,11 @@ class GooglePlugin(TGPluginBase):
                     url = res['url']
                     fp = StringIO(requests.get(url).content)
                     file_info = InputFileInfo(url.split('/')[-1], fp, mimetypes.guess_type(url)[0])
-                    bot.tg.send_photo(chat_id=message.chat.id, photo=InputFile('photo', file_info))
+                    bot.send_photo(chat_id=message.chat.id, photo=InputFile('photo', file_info))
                 except IndexError:
                     reply = 'Sorry, nothing found...'
             else:
                 reply = 'It seems I\'m googling too much lately, I need to rest a little...'
 
             if reply:
-                bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)
+                bot.send_message(message.chat.id, reply, reply_to_message_id=message.message_id)

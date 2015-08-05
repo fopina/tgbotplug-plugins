@@ -10,9 +10,9 @@ class EchoPlugin(TGPluginBase):
 
     def echo(self, bot, message, text):
         if text:
-            bot.tg.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,

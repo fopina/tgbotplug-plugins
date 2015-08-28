@@ -116,6 +116,9 @@ class AdminPlugin(tgbot.TGPluginBase):
             bot.send_message(message.chat.id, 'Something went wrong...')
             return
 
+        if dst[0] == 'N':
+            dst = '-' + dst[1:]
+
         m = bot.send_message(dst, msg).wait()
         if isinstance(m, Error):
             bot.send_message(message.chat.id, "Failed to send message:\n%s (%d)" % (m.description, m.error_code))

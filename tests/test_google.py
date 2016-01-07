@@ -39,28 +39,24 @@ class GooglePluginTest(plugintest.PluginTestCase):
         self.assertReplied(self.bot, 'Sorry, nothing found...')
 
     def test_reply(self):
-        self.receive_message('/g site:skmobi.com')
+        self.receive_message('/g site:skmobi.com TimeIsMoney')
         self.assertReplied(self.bot, u'''\
-skmobi
+skmobi - TimeIsMoney
 
-skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
+Time is Money! So, "time" your money with this app. TimeIsMoney uses the \n\
+interface you're used to from Clock.app stopwatch, but instead of showing time, ...
 
-Daring Fireball. Copyright © 2012 Filipe Pina.
-
-http://skmobi.com/\
-''')
+http://skmobi.com/timeismoney/''')
 
     def test_need_reply(self):
         self.receive_message('/g')
         self.assertReplied(self.bot, 'Google for what?')
 
-        self.receive_message('site:skmobi.com')
+        self.receive_message('site:skmobi.com TimeIsMoney')
         self.assertReplied(self.bot, u'''\
-skmobi
+skmobi - TimeIsMoney
 
-skmobi. iPhone Apps · Android Apps · Contact · Layout & Design 100% ripped off. \
+Time is Money! So, "time" your money with this app. TimeIsMoney uses the \n\
+interface you're used to from Clock.app stopwatch, but instead of showing time, ...
 
-Daring Fireball. Copyright © 2012 Filipe Pina.
-
-http://skmobi.com/\
-''')
+http://skmobi.com/timeismoney/''')

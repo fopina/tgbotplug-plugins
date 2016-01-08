@@ -103,6 +103,7 @@ class AdminPluginTest(plugintest.PluginTestCase):
             chat={
                 'id': 1,
                 'title': 'chat 1',
+                'type': 'group',
             }
         )
 
@@ -114,6 +115,7 @@ class AdminPluginTest(plugintest.PluginTestCase):
             chat={
                 'id': 2,
                 'title': 'chat 2',
+                'type': 'group',
             }
         )
 
@@ -129,6 +131,7 @@ class AdminPluginTest(plugintest.PluginTestCase):
             {
                 'id': 1,
                 'title': 'chat 1',
+                'type': 'group',
             }
         )
 
@@ -198,6 +201,7 @@ There are more, type /more to list 10 more results''')
             self.receive_message('hey', chat={
                 'id': i,
                 'title': 'chat %d' % i,
+                'type': 'group',
             })
 
         self.receive_message('/chats')

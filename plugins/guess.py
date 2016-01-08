@@ -10,11 +10,11 @@ class GuessPlugin(TGPluginBase):
             TGCommandBase('guess_stop', self.guess_stop, u'stop the (number) guess game (why? \U0001F622)')
         )
 
-    def guess_start(self, bot, message, text):
+    def guess_start(self, message, text):
         number = int(random() * 10)
         self.save_data(message.chat.id, obj=number)
 
-        m = bot.tg.send_message(
+        m = self.bot.send_message(
             message.chat.id,
             "I'm going to think of a number between 0 and 9 and you have to guess it! What's your guess?",
             reply_to_message_id=message.message_id,
@@ -31,7 +31,7 @@ class GuessPlugin(TGPluginBase):
         ).wait()
         self.need_reply(self.guess_try, message, out_message=m, selective=True)
 
-    def guess_try(self, bot, message, text):
+    def guess_try(self, message, text):
         number = self.read_data(message.chat.id)
 
         done = False
@@ -51,14 +51,14 @@ class GuessPlugin(TGPluginBase):
         if done:
             self.save_data(message.chat.id)
             self.clear_chat_replies(message.chat)
-            bot.tg.send_message(
+            self.bot.send_message(
                 message.chat.id,
                 reply,
                 reply_to_message_id=message.message_id,
                 reply_markup=ReplyKeyboardHide.create()
             )
         else:
-            m = bot.tg.send_message(
+            m = self.bot.send_message(
                 message.chat.id,
                 reply,
                 reply_to_message_id=message.message_id,
@@ -75,11 +75,11 @@ class GuessPlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.guess_try, message, out_message=m, selective=True)
 
-    def guess_stop(self, bot, message, text):
+    def guess_stop(self, message, text):
         self.save_data(message.chat.id)
         self.clear_chat_replies(message.chat)
 
-        bot.tg.send_message(
+        self.bot.send_message(
             message.chat.id,
             'Ok :(',
             reply_to_message_id=message.message_id,

@@ -17,9 +17,9 @@ class GooglePlugin(TGPluginBase):
             TGCommandBase('g', self.google, 'Google it'),
         )
 
-    def google(self, bot, message, text):
+    def google(self, message, text):
         if not text:
-            m = bot.tg.send_message(
+            m = self.bot.send_message(
                 message.chat.id,
                 'Google for what?',
                 reply_to_message_id=message.message_id,
@@ -27,7 +27,7 @@ class GooglePlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.google, message, out_message=m, selective=True)
         else:
-            bot.tg.send_chat_action(message.chat.id, ChatAction.TEXT)
+            self.bot.send_chat_action(message.chat.id, ChatAction.TEXT)
 
             res = requests.get('http://ajax.googleapis.com/ajax/services/search/web', params={
                 'v': 1.0,
@@ -45,4 +45,4 @@ class GooglePlugin(TGPluginBase):
             else:
                 reply = 'It seems I\'m googling too much lately, I need to rest a little...'
 
-            bot.tg.send_message(message.chat.id, reply, reply_to_message_id=message.message_id, disable_web_page_preview=True)
+            self.bot.send_message(message.chat.id, reply, reply_to_message_id=message.message_id, disable_web_page_preview=True)

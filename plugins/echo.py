@@ -8,11 +8,11 @@ class EchoPlugin(TGPluginBase):
             TGCommandBase('echo', self.echo, 'right back at ya'),
         )
 
-    def echo(self, bot, message, text):
+    def echo(self, message, text):
         if text:
-            bot.tg.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.tg.send_message(
+            m = self.bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,

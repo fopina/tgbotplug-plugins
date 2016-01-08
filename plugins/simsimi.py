@@ -5,7 +5,6 @@ import requests
 
 class SimsimiPlugin(tgbot.TGPluginBase):
     def simsimi(self, message, text):
-        print 'oi'
         self.bot.send_chat_action(message.chat.id, ChatAction.TEXT)
 
         res = requests.get('http://www.simsimi.com/requestChat', params={

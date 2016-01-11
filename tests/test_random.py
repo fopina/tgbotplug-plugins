@@ -1,5 +1,5 @@
 from tgbot import plugintest
-from twx.botapi import Update
+from tgbot.botapi import Update
 from plugins.random_choice import RandomPlugin
 
 

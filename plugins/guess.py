@@ -1,5 +1,5 @@
 from tgbot.pluginbase import TGPluginBase, TGCommandBase
-from twx.botapi import ReplyKeyboardMarkup, ReplyKeyboardHide
+from tgbot.botapi import ReplyKeyboardMarkup, ReplyKeyboardHide
 from random import random
 
 

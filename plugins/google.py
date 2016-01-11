@@ -1,5 +1,5 @@
 from tgbot.pluginbase import TGPluginBase, TGCommandBase
-from twx.botapi import ForceReply, ChatAction
+from tgbot.botapi import ForceReply, ChatAction
 import re
 import HTMLParser
 import requests

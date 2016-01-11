@@ -1,6 +1,6 @@
 from tgbot.pluginbase import TGPluginBase, TGCommandBase
 from random import choice
-from twx.botapi import ForceReply
+from tgbot.botapi import ForceReply
 
 
 class RandomPlugin(TGPluginBase):

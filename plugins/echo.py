@@ -1,5 +1,5 @@
 from tgbot.pluginbase import TGPluginBase, TGCommandBase
-from twx.botapi import ForceReply
+from tgbot.botapi import ForceReply
 
 
 class EchoPlugin(TGPluginBase):

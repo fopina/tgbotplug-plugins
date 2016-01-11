@@ -1,7 +1,10 @@
 # coding=utf-8
 from tgbot import plugintest
-from twx.botapi import Update
+from tgbot.botapi import Update
 from plugins.google import GooglePlugin
+
+from requests.packages import urllib3
+urllib3.disable_warnings()
 
 
 class GooglePluginTest(plugintest.PluginTestCase):

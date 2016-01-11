@@ -1,6 +1,6 @@
 # coding=utf-8
 from tgbot import plugintest
-from twx.botapi import Update
+from tgbot.botapi import Update
 from plugins.simsimi import SimsimiPlugin
 
 

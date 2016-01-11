@@ -1,6 +1,6 @@
 # coding=utf-8
 from tgbot import plugintest
-from twx.botapi import Update, User
+from tgbot.botapi import Update, User
 from plugins.admin import AdminPlugin
 
 

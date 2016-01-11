@@ -1,5 +1,5 @@
 import tgbot
-from twx.botapi import Error, ForceReply
+from tgbot.botapi import Error, ForceReply
 import hashlib
 
 

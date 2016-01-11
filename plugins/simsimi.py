@@ -1,5 +1,5 @@
 import tgbot
-from twx.botapi import ChatAction
+from tgbot.botapi import ChatAction
 import requests
 
 

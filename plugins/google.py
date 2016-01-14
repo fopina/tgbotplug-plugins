@@ -42,7 +42,7 @@ class GooglePlugin(TGPluginBase):
                     reply = '%(titleNoFormatting)s\n\n%(content)s\n\n%(url)s' % res
                 except IndexError:
                     reply = 'Sorry, nothing found...'
-            else:
+            else:  # pragma: no cover
                 reply = 'It seems I\'m googling too much lately, I need to rest a little...'
 
             self.bot.send_message(message.chat.id, reply, reply_to_message_id=message.message_id, disable_web_page_preview=True)

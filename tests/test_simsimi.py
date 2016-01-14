@@ -39,3 +39,9 @@ class SimsimiPluginTest(plugintest.PluginTestCase):
 
         # any reply will do...
         self.last_reply(self.bot)
+
+    def test_no_reply(self):
+        self.receive_message('')
+
+        # any reply will do...
+        self.assertRaisesRegexp(AssertionError, 'No replies', self.last_reply, self.bot)

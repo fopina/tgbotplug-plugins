@@ -1,2 +1,2 @@
 #-e git+https://github.com/fopina/tgbotplug@v1.2.5#egg=tgbotplug
-tgbotplug==1.2.5
+tgbotplug==1.2.7

@@ -1,4 +1,7 @@
 # tgbotplug-plugins
+
+*REPO DISCONTINUED AND MOVED TO https://github.com/fopina/tgbotplug/tree/master/plugin_examples*
+
 Plugin Examples for [tgbotplug](https://github.com/fopina/tgbotplug)  
 [![Build Status](https://travis-ci.org/fopina/tgbotplug-plugins.svg)](https://travis-ci.org/fopina/tgbotplug-plugins) [![Coverage Status](https://coveralls.io/repos/fopina/tgbotplug-plugins/badge.svg?branch=master&service=github)](https://coveralls.io/github/fopina/tgbotplug-plugins?branch=master)
 
